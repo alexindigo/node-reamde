@@ -9,15 +9,22 @@ var fs      = require('fs')
       [
         'callback'
       ],
+      // map 'reamde' to the local module
+      mapping:
+      {
+        'reamde': function()
+        {
+          return reamde;
+        }
+      },
       // replacements within function body
       replace:
       {
-        'require(\'reamde\')' : reamde,
-        'console.log('        : 'callback('
+        'console.log(' : 'callback('
       }
     }
   , examples
-  , numberOfExamples = 3
+  , numberOfExamples = 4
   ;
 
 // Eating our own dog food
@@ -55,4 +62,16 @@ examples[2](function(result)
 {
   // third example "returns" object
   assert.equal(result['data'].length, numberOfExamples);
+});
+
+// --- Fourth example
+
+// should be a function
+assert.equal(typeof examples[3], 'function');
+
+// and return list of functions in the readme
+examples[3](function(result)
+{
+  // third example "returns" object
+  assert.equal(result.length, numberOfExamples);
 });

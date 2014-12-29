@@ -33,7 +33,7 @@ File `README.md` contains following:
     ```
 
 
-### Non-runnable example
+### Non-Runnable Example
 
 ```
 $ echo "This code block won't be converted into a function"
@@ -96,6 +96,34 @@ examples = reamde(content, {runtime: ['console'], replace: {'\'reamde\'': '\'./\
 examples[0]({log: customLog});
 
 ```
+
+### Require Mapping
+
+Allows to substitute required modules from example with custom functions. Each mapping member should be a function that returns required module or its substitute. Optionally accepts `require` function as first argument, in case you have provided custom require for the examples.
+
+```javascript
+var fs      = require('fs')
+  , reamde  = require('reamde')
+  , content = fs.readFileSync('./README.md', 'utf-8')
+  , examples
+  , options
+  ;
+
+// prepare option
+options =
+{
+  mapping: {'reamde': function(require) { return require('./'); }}
+};
+
+examples = reamde(content, options);
+
+console.log(examples);
+
+```
+
+## TODO
+
+- Don't strip 4+ spaces indentation with runnable examples.
 
 ## License
 

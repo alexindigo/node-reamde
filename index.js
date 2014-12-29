@@ -20,6 +20,9 @@ parseReadme.matchPattern = new RegExp('```javascript(?=\\s)([\\s\\S]+?)```(?=\\s
 // replaces strings with function body
 parseReadme.defaultReplace = {};
 
+// replaces strings with function body
+parseReadme.defaultMapping = {};
+
 // passes arguments to a example function call
 parseReadme.defaultArguments = {'require': require};
 
@@ -73,10 +76,14 @@ function processOptions(options)
 {
   var combined =
   {
-    replace   : shallowClone(options.replace || parseReadme.defaultReplace),
-    runtime   : [].concat(options.runtime || parseReadme.defaultRuntimeArguments),
+    replace   : shallowClone(options.replace   || parseReadme.defaultReplace),
+    runtime   : [].concat(options.runtime      || parseReadme.defaultRuntimeArguments),
+    mapping   : shallowClone(options.mapping   || parseReadme.defaultMapping),
     arguments : shallowClone(options.arguments || parseReadme.defaultArguments)
   };
+
+  // add require mapping wrapper with fallback to require provided in options
+  combined.arguments.require = requireWithMapping.bind(null, combined.arguments.require, combined.mapping);
 
   return combined;
 }
@@ -117,6 +124,19 @@ function replaceSubstrings(text, options)
   });
 
   return text;
+}
+
+// Allows mapping for required modules
+function requireWithMapping(require, mapping, module)
+{
+  var resolved;
+
+  if (module in mapping)
+  {
+    resolved = mapping[module](require);
+  }
+
+  return resolved || require(module);
 }
 
 // converts arguments into an arrays of names and values

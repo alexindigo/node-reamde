@@ -1,6 +1,6 @@
 {
   "name": "reamde",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Strips javascript code blocks out of README (or any other markdown) files and converts them into function objects.",
   "main": "index.js",
   "scripts": {
